@@ -80,10 +80,12 @@ ATTR_PRINTF((one_based_format_index), 0)
 # define vprintf_   vprintf
 #endif
 
+/**
 // If you want to include this implementation file directly rather than
 // link against it, this will let you control the functions' visibility,
 // e.g. make them static so as not to clash with other objects also
 // using them.
+ */
 #ifndef PRINTF_VISIBILITY
 #define PRINTF_VISIBILITY
 #endif
