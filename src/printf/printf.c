@@ -454,7 +454,7 @@ static inline output_gadget_t function_gadget(void (*function)(char, void*), voi
   result.max_chars = PRINTF_MAX_POSSIBLE_BUFFER_SIZE;
   return result;
 }
-
+// cause double comment
 static inline output_gadget_t extern_putchar_gadget(void)
 {
   return function_gadget(putchar_wrapper, NULL);
