@@ -473,6 +473,12 @@ static inline printf_size_t strnlen_s_(const char* str, printf_size_t maxsize)
   return (printf_size_t)(s - str);
 }
 
+static inline unsigned int wcslen_s_(const wchar_t* str, size_t maxsize)
+{
+  const wchar_t* s;
+  for (s = str; *s && maxsize--; ++s);
+  return (unsigned int)(s - str);
+}
 
 /**
  * internal test if char is a digit (0-9)
@@ -1432,6 +1438,38 @@ static inline void format_string_loop(output_gadget_t* output, const char* forma
 
       case 's' : {
         const char* p = va_arg(args, char*);
+        if (p == NULL) {
+          out_rev_(output, ")llun(", 6, width, flags);
+        }
+        else {
+          printf_size_t l = strnlen_s_(p, precision ? precision : PRINTF_MAX_POSSIBLE_BUFFER_SIZE);
+          /* pre padding */
+          if (flags & FLAGS_PRECISION) {
+            l = (l < precision ? l : precision);
+          }
+          if (!(flags & FLAGS_LEFT)) {
+            while (l++ < width) {
+              putchar_via_gadget(output, ' ');
+            }
+          }
+          /* string output */
+          while ((*p != 0) && (!(flags & FLAGS_PRECISION) || precision)) {
+            putchar_via_gadget(output, *(p++));
+            --precision;
+          }
+          /* post padding */
+          if (flags & FLAGS_LEFT) {
+            while (l++ < width) {
+              putchar_via_gadget(output, ' ');
+            }
+          }
+        }
+        format++;
+        break;
+      }
+
+      case 'S' : {
+        const wchar_t* p = va_arg(args, wchar_t*);
         if (p == NULL) {
           out_rev_(output, ")llun(", 6, width, flags);
         }
