@@ -25,7 +25,9 @@ foreach(tgt ${test_targets})
 	endif()
 endforeach()
 
+target_compile_definitions(autotest PRIVATE PRINTF_INCLUDE_CONFIG_H=0)
 add_executable(aliasing "aliasing.c")
+target_compile_definitions(aliasing PRIVATE PRINTF_INCLUDE_CONFIG_H=0)
 set_target_properties(
 	${tgt}
 	PROPERTIES
@@ -88,7 +90,7 @@ if (TARGET test_suite)
 	# These two lines are necessary, since the test suite does not actually use the
 	# compiled library - it includes the library's source .c file; and that means we
 	# need to include the generated config.h file.
-	target_compile_definitions(test_suite PRIVATE PRINTF_INCLUDE_CONFIG_H)
+	target_compile_definitions(test_suite PRIVATE PRINTF_INCLUDE_CONFIG_H=1)
 	target_include_directories(
 		test_suite
 		PRIVATE
